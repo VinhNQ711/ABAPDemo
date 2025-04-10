@@ -10,12 +10,14 @@
 *& <--  p2        text
 *&---------------------------------------------------------------------*
 FORM main .
-
+" Lấy thông tin company code
   SELECT *
     FROM t001
     INTO TABLE @DATA(ldt_comp_info)
     WHERE bukrs = @p_bukrs.
   IF sy-subrc <> 0.
     MESSAGE 'No data' TYPE 'E' DISPLAY LIKE 'S'.
+  ELSE.
+    MESSAGE 'OK' TYPE 'S'.
   ENDIF.
 ENDFORM.
