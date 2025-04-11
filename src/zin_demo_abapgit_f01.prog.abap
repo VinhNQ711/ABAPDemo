@@ -18,6 +18,5 @@ FORM main .
   IF sy-subrc <> 0.
     MESSAGE 'No data' TYPE 'E' DISPLAY LIKE 'S'.
   ELSE.
-    MESSAGE 'OK' TYPE 'S'.
   ENDIF.
 ENDFORM.
