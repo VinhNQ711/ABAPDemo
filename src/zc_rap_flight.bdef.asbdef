@@ -16,4 +16,17 @@ use etag
   use action Discard;
   use action Resume;
   use action Prepare;
+
+  use association _Passengers { create; with draft; }
+}
+
+define behavior for ZC_RAP_PASSENGER alias Passenger
+use etag
+{
+  use update;
+  use delete;
+
+  use action validatePassenger;
+
+  use association _Flight { with draft; }
 } 

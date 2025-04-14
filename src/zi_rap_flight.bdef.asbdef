@@ -1,30 +1,39 @@
 managed implementation in class zbp_i_rap_flight unique;
-with draft;
 strict ( 2 );
+with draft;
 
 define behavior for ZI_RAP_FLIGHT alias Flight
 persistent table zrap_vnq_flight
 draft table zrap_d_flight
 lock master
+total etag LastChangedAt
 authorization master ( instance )
-etag master LastChangedAt
 etag master LocalLastChangedAt
 {
   create;
   update;
   delete;
 
-  field ( numbering : managed, readonly ) FlightId;
-  field ( readonly ) CreatedBy, CreatedAt, LastChangedBy, LastChangedAt;
-  field ( mandatory ) DeparturePoint, Destination, DepartureTime;
+  field ( readonly ) LastChangedAt, LastChangedBy, CreatedAt, CreatedBy;
+  field ( mandatory ) DeparturePoint, Destination;
+  field ( features : instance ) FlightStatus;
 
-  validation validateFlightTimes on save { create; update; }
+  validation validateData on save { create; update; }
 
-  association _Passengers { create; }
+  determination setStatusToNew on modify { create; }
+
+  draft action Edit;
+  draft action Activate;
+  draft action Discard;
+  draft action Resume;
+
+  draft determine action Prepare {
+    validation validateData;
+  }
 
   mapping for zrap_vnq_flight
   {
-    FlightId = flight_id;
+    FlightID = flight_id;
     DeparturePoint = departure_point;
     Destination = destination;
     DepartureTime = departure_time;
@@ -34,42 +43,35 @@ etag master LocalLastChangedAt
     CreatedAt = created_at;
     LastChangedBy = last_changed_by;
     LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
   }
 
-  draft determine action Prepare {
-    validation validateData;
-  }
-  
-  draft action Edit;
-  draft action Activate;
-  draft action Discard;
-  draft action Resume;
+  association _Passengers { create; with draft; }
 }
 
 define behavior for ZI_RAP_PASSENGER alias Passenger
 persistent table zrap_passngr
+draft table zrap_d_passngr
 lock dependent by _Flight
 authorization dependent by _Flight
-etag master LastChangedAt
+etag master LocalLastChangedAt
 {
   update;
   delete;
 
-  field ( numbering : managed, readonly ) PassengerId;
-  field ( readonly ) FlightId, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt;
-  field ( mandatory ) FullName, IdNumber, BirthDate, Gender, SeatNumber;
+  field ( readonly ) FlightID, LastChangedAt, LastChangedBy, CreatedAt, CreatedBy;
+  field ( mandatory ) FullName, IDNumber;
 
-  validation validateSeatNumber on save { create; update; }
-  validation validateIdNumber on save { create; update; }
+  validation validatePassenger on save { create; update; }
 
-  association _Flight;
+  determination setInitialValues on modify { create; }
 
   mapping for zrap_passngr
   {
-    PassengerId = passenger_id;
-    FlightId = flight_id;
+    PassengerID = passenger_id;
+    FlightID = flight_id;
     FullName = full_name;
-    IdNumber = id_number;
+    IDNumber = id_number;
     BirthDate = birth_date;
     Gender = gender;
     SeatNumber = seat_number;
@@ -77,5 +79,8 @@ etag master LastChangedAt
     CreatedAt = created_at;
     LastChangedBy = last_changed_by;
     LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
   }
+
+  association _Flight { with draft; }
 } 
