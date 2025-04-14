@@ -1,0 +1,93 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: {
+    typeName: 'Passenger',
+    typeNamePlural: 'Passengers',
+    title: {
+      type: #STANDARD,
+      value: 'FullName'
+    },
+    description: {
+      value: 'SeatNumber'
+    },
+    imageUrl: 'ImageUrl'
+  },
+  presentationVariant: [{
+    sortOrder: [{
+      by: 'SeatNumber',
+      direction: #ASC
+    }],
+    visualizations: [{
+      type: #AS_LINEITEM
+    }]
+  }]
+}
+annotate entity ZC_RAP_PASSENGER with {
+  @UI.facet: [
+    {
+      id: 'Passenger',
+      purpose: #STANDARD,
+      type: #IDENTIFICATION_REFERENCE,
+      label: 'Passenger Details',
+      position: 10
+    }
+  ]
+
+  @UI.hidden: true
+  PassengerID;
+
+  @UI.hidden: true
+  FlightID;
+
+  @UI: {
+    lineItem: [{ position: 10 }],
+    identification: [{ position: 10 }],
+    selectionField: [{ position: 10 }]
+  }
+  @UI.fieldGroup: [{ qualifier: 'GeneralInfo', position: 10 }]
+  FullName;
+
+  @UI: {
+    lineItem: [{ position: 20 }],
+    identification: [{ position: 20 }],
+    selectionField: [{ position: 20 }]
+  }
+  @UI.fieldGroup: [{ qualifier: 'GeneralInfo', position: 20 }]
+  IDNumber;
+
+  @UI: {
+    lineItem: [{ position: 30 }],
+    identification: [{ position: 30 }]
+  }
+  @UI.fieldGroup: [{ qualifier: 'GeneralInfo', position: 30 }]
+  BirthDate;
+
+  @UI: {
+    lineItem: [{ position: 40 }],
+    identification: [{ position: 40 }]
+  }
+  @UI.fieldGroup: [{ qualifier: 'GeneralInfo', position: 40 }]
+  Gender;
+
+  @UI: {
+    lineItem: [{ position: 50 }],
+    identification: [{ position: 50 }]
+  }
+  @UI.fieldGroup: [{ qualifier: 'GeneralInfo', position: 50 }]
+  SeatNumber;
+
+  @UI.hidden: true
+  CreatedBy;
+
+  @UI.hidden: true
+  CreatedAt;
+
+  @UI.hidden: true
+  LastChangedBy;
+
+  @UI.hidden: true
+  LastChangedAt;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+} 
